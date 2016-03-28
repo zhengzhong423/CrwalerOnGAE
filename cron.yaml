@@ -1,0 +1,5 @@
+cron:
+- description: test cron job
+  url: /cronJob
+  schedule: every day 21:30
+  timezone: America/Los_Angeles
