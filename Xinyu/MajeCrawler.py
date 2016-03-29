@@ -116,30 +116,11 @@ class MajeCrawl(object):
         maje = MajeCrawl()
         url0 = maje.get_page_url_with_all_product()
         maje.get_daily_sale_item(url0)
-        # url0 = maje.get_page_url_with_all_product()
-        # (res, diff) = maje.get_item_list(url0, self.yesterday_result)
-        # maje.write_file(res, diff)
-        # final_str = maje.process_difference(res, diff)
         text = maje.text_factory()
         maje.deliver_email(text)
-        # return diff
 
 if __name__ == '__main__':
     print MajeCrawl().crawl()
-
-    # msg = MIMEText(final_str)
-    # msg['Subject'] = '[From Zhong] Maje New Sale '+str(date.today())
-    #
-    # fromaddr = 'zhengzhong2013@gmail.com'
-    # toaddrs = ['xinyuliu0510@gmail.com', 'zhengzhong2013@gmail.com']
-    # username = 'zhengzhong2013@gmail.com'
-    # password = 'zjl214zjl214'
-    # server = smtplib.SMTP('smtp.gmail.com:587')
-    # server.starttls()
-    # server.login(username, password)
-    # for toaddr in toaddrs:
-    #     server.sendmail(fromaddr, toaddr, msg.as_string())
-    # server.quit()
 
 
 

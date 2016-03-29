@@ -23,25 +23,12 @@ libs = os.path.join(rootdir, 'libs')
 sys.path.append(libs)
 from Crawler import *
 
-# class DailySale(db.Model):
-#   hash_id = db.StringProperty(required=True)
-#   name = db.StringProperty(required=True)
-#   discount = db.IntegerProperty(required=True)
-#   link = db.StringProperty(required=True)
-#   cur_price = db.FloatProperty(required=True)
-#   base_price = db.FloatProperty(required=True)
-#   image = db.StringProperty(required=True)
-#   date = db.DateProperty(required=True)
-
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        # MajeCrawl().crawl()
-        # SandroCrawl().crawl()
         MajeCrawl().crawl()
         self.response.write('Hello world!')
 
-        # all_sales = DailySale.query(DailySale.date < (date.today()+timedelta(days=1)))
 
 app = webapp2.WSGIApplication([
     ('/cronJob', MainHandler)
