@@ -94,25 +94,26 @@ class MajeCrawl(object):
                             str(self.pre_update_count - len(self.result)) + '</font></span></h2>'
 
         for item in self.result:
-            send_content += "<div style=\"margin-top: 100px\"><h2><a href = \""+item["link"]+"\"><b>" + \
-                            item["name"].title()+"</b> ["+item["reason"].title()+"]</a></h2>"
-            send_content += "<p> "+item["discount"]+" OFF! </p>"
-            send_content += "<p> <strike>"+str(item["base_price"])+"</strike> "
-            send_content += "<font color=\"red\">"+str(item["cur_price"])+" </font></p>"
+            send_content += "<div style=\"margin-top: 50px\"><h2><a href = \""+item["link"] + "\"><b>" + \
+                            item["name"].title() + "</b> [" + item["reason"].title() + "]</a></h2>"
+            send_content += "<p> " + item["discount"] + "% OFF </p>"
+            send_content += "<p> <strike><font size='2'>$" + str(item["base_price"])+"</font></strike> "
+            send_content += "<font color=\"red\"><font size='4'>$" + str(item["cur_price"]) + " </font></p>"
 
-            send_content += "<p><img src=\""+item["image"]+"\"></p></div>"
+            send_content += "<p><img src=\"" + item["image"] + "\"></p></div>"
         send_content += "</body></html>"
         return send_content
 
     @staticmethod
     def deliver_email(text):
-        message = mail.EmailMessage(sender=u"胖臭\N{trade mark sign}家 <zhengzhong2013@gmail.com>",
+        message = mail.EmailMessage(sender=u"胖臭家 <zhengzhong2013@gmail.com>",
                                     subject='[From GAE] Maje New Sale ' + str(date.today()))
-        message.to = ['zhengzhong2013@gmail.com', u"最爱的胖牛<xinyuliu0510@gmail.com>"]
+        message.to = [u"胖臭<zhengzhong2013@gmail.com>", u"最爱的胖牛<xinyuliu0510@gmail.com>"]
         message.html = text
         message.send()
 
-    def crawl(self):
+    @staticmethod
+    def crawl():
         maje = MajeCrawl()
         url0 = maje.get_page_url_with_all_product()
         maje.get_daily_sale_item(url0)

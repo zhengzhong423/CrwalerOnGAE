@@ -3,7 +3,8 @@ from SandroCrawler import *
 
 
 class Crawler(object):
-    def go(self):
+    @staticmethod
+    def go():
         MajeCrawl().crawl()
         SandroCrawl().crawl()
 
