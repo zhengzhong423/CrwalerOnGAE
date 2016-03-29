@@ -32,7 +32,7 @@ class MajeCrawl(object):
                 elem = elem[0]
                 item_id = item.find_all("div", {"class": "product-tile"})[0].get("data-itemid")
                 attr = json.loads(elem["data-pricings"])
-                attr = attr[attr.keys()[len(attr.keys())-1]]
+                attr = attr[attr.keys()[len(attr.keys()) - 1]]
                 base_price = self.price_str_to_float(attr["formattedOldPrice"])
                 cur_price = self.price_str_to_float(attr["formattedSalePrice"])
                 link = item.find_all("a", {"class": "nameStyle"})[0].get("href")
