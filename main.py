@@ -16,20 +16,28 @@
 #
 import webapp2
 import sys
-import os
-sys.path.append('./Xinyu/')
-rootdir = os.path.dirname(os.path.abspath(__file__))
-libs = os.path.join(rootdir, 'libs')
-sys.path.append(libs)
+sys.path.append('./handler/')
+sys.path.append('./libs/')
 from Crawler import *
 
 
-class MainHandler(webapp2.RequestHandler):
+class CronHandler(webapp2.RequestHandler):
     def get(self):
-        MajeCrawl().crawl()
-        self.response.write('Hello world!')
+        text = MajeCrawl().crawl()
+        self.response.write(text)
+
+
+class MailHandler(webapp2.RequestHandler):
+    def post(self):
+        if self.request.get("flag") == "0":
+            MailManager(email_addr=self.request.get("address"), sub_content=self.request.get_all("sources")).subscribe()
+            self.redirect("/subscribed")
+        else:
+            MailManager(email_addr=self.request.get("address")).unsubscribe()
+            self.redirect("/unsubscribed")
 
 
 app = webapp2.WSGIApplication([
-    ('/cronJob', MainHandler)
+    ('/cronJob', CronHandler),
+    ('/mailManager', MailHandler),
 ], debug=True)

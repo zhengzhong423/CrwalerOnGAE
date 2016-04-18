@@ -17,8 +17,8 @@ class SandroCrawl(object):
         self.find = False
         i = 1
         while i < 10:
-            if os.path.isfile("/Users/zhonzhen/Desktop/Crawler/Xinyu/log/full/Sandro/Sandro_Sale_"+str(date.today()-timedelta(days=i)) + ".txt"):
-                with open("/Users/zhonzhen/Desktop/Crawler/Xinyu/log/full/Sandro/Sandro_Sale_"+str(date.today()-timedelta(days=i)) + ".txt", "r") as f:
+            if os.path.isfile("/Users/zhonzhen/Desktop/Crawler/handler/log/full/Sandro/Sandro_Sale_"+str(date.today()-timedelta(days=i)) + ".txt"):
+                with open("/Users/zhonzhen/Desktop/Crawler/handler/log/full/Sandro/Sandro_Sale_"+str(date.today()-timedelta(days=i)) + ".txt", "r") as f:
                     self.yesterday_result = json.loads(f.read())
                     f.close()
                     break
@@ -80,11 +80,11 @@ class SandroCrawl(object):
         return send_content
 
     def write_file(self, res, diff):
-        with open("/Users/zhonzhen/Desktop/Crawler/Xinyu/log/full/Sandro/Sandro_Sale_"+str(date.today())+".txt", "w") as f:
+        with open("/Users/zhonzhen/Desktop/Crawler/handler/log/full/Sandro/Sandro_Sale_"+str(date.today())+".txt", "w") as f:
             f.write(json.dumps(res))
             f.close()
 
-        with open("/Users/zhonzhen/Desktop/Crawler/Xinyu/log/diff/Sandro/Sale_Diff_"+str(date.today())+".txt", "w") as f:
+        with open("/Users/zhonzhen/Desktop/Crawler/handler/log/diff/Sandro/Sale_Diff_"+str(date.today())+".txt", "w") as f:
             f.write(json.dumps(diff))
             f.close()
 

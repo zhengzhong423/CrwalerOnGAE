@@ -12,7 +12,7 @@ class DailySale(ndb.Model):
     date = ndb.DateProperty(required=True)
 
 
-class UpdateNumber(ndb.Model):
+class NewSaleStats(ndb.Model):
     count = ndb.IntegerProperty(required=True)
     date = ndb.DateProperty(required=True)
 
@@ -30,8 +30,8 @@ class GDB(object):
                   date=date.today()).put()
 
     @staticmethod
-    def clean():
-        all_record = DailySale.query()
+    def clean(obj):
+        all_record = obj.query()
         for r in all_record:
             r.key.delete()
 
@@ -56,16 +56,25 @@ class GDB(object):
 
     @staticmethod
     def save_update(number):
-        UpdateNumber(count=number, date=date.today()).put()
+        NewSaleStats(id=str(date.today()), date=date.today(), count=number).put()
 
     @staticmethod
     def get_update_count(query_date):
-        val = UpdateNumber.query(UpdateNumber.date == query_date)
-        for each in val:
-            return each.count
+        val = NewSaleStats.query(NewSaleStats.date == query_date).get()
+        if val:
+            return val.count
         return 0
 
+    @staticmethod
+    def get_count(obj):
+        return obj.query().count()
 
+    @staticmethod
+    def get_day_ids(this_day):
+        l = []
+        for val in DailySale.query(DailySale.date == this_day).fetch():
+            l.append(val.id)
+        return l
 
 
 

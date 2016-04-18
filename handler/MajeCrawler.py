@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import urllib2
 import bs4
-from googledb import *
+from SaleDataManager import *
 from google.appengine.api import mail
 import json
 import re
+import time
+from MailDataManager import *
 
 BASE_URL = "http://us.maje.com/en/sale/"
 
@@ -14,23 +16,32 @@ class MajeCrawl(object):
     def __init__(self):
         self.GDB = GDB()
         self.result = list()
+        self.pending = list()
         self.count = 0
         self.pre_sale_count = 0
         self.pre_update_count = 0
+        self.pre_ids = []
+        self.daily_sale = DailySale()
+        self.update_number = NewSaleStats()
         return
 
     def get_daily_sale_item(self, start_url):
         html = urllib2.urlopen(start_url, timeout=45)
         soup = bs4.BeautifulSoup(html, "html.parser")
         item_list = soup.find_all("li", {"class": "grid-tile"})
-        # self.GDB.clean()
+        # self.GDB.clean(self.daily_sale)
+        # self.GDB.clean(self.update_number)
+
         self.pre_sale_count = self.GDB.get_day_count(date.today() - timedelta(days=1))
         self.pre_update_count = self.GDB.get_update_count(date.today() - timedelta(days=1))
+        self.pre_ids = self.GDB.get_day_ids(date.today() - timedelta(days=1))
+
         for item in item_list:
             elem = item.find_all("span", {"class": "product-pricing-data"})
             if len(elem) > 0:
+                color = item.get("data-colors-to-show")
+                item_id = item.find_all("div", {"class": "product-tile"})[0].get("data-itemid") + color
                 elem = elem[0]
-                item_id = item.find_all("div", {"class": "product-tile"})[0].get("data-itemid")
                 attr = json.loads(elem["data-pricings"])
                 attr = attr[attr.keys()[len(attr.keys()) - 1]]
                 base_price = self.price_str_to_float(attr["formattedOldPrice"])
@@ -41,17 +52,22 @@ class MajeCrawl(object):
                 item = {"hash_id": item_id, "name": name, "discount": str(attr["reductionPercentage"]),
                         "base_price": base_price, "cur_price": cur_price,
                         "link": link, "image": img}
-                if not self.GDB.contains_id(item_id):
+                time.sleep(100 / 1000)
+                if not self.pre_ids:
                     item["reason"] = u"新的SALE"
                     self.result.append(item)
                 elif self.GDB.lower_price(item_id, cur_price):
                     item["reason"] = u"更低的价格"
                     self.result.append(item)
-                self.GDB.save(item)
+
+                self.pending.append(item)
                 self.count += 1
+
         self.GDB.save_update(len(self.result))
-        print self.pre_sale_count
-        print self.pre_update_count
+
+        time.sleep(5000 / 1000)
+        for item in self.pending:
+            self.GDB.save(item)
 
     @staticmethod
     def price_str_to_float(price_str):
@@ -94,11 +110,11 @@ class MajeCrawl(object):
                             str(self.pre_update_count - len(self.result)) + '</font></span></h2>'
 
         for item in self.result:
-            send_content += "<div style=\"margin-top: 50px\"><h2><a href = \""+item["link"] + "\"><b>" + \
+            send_content += "<div style=\"margin-top: 50px\"><h2><a href = \"" + item["link"] + "\"><b>" + \
                             item["name"].title() + "</b> [" + item["reason"].title() + "]</a></h2>"
             send_content += "<p> " + item["discount"] + "% OFF </p>"
-            send_content += "<p> <strike><font size='2'>$" + str(item["base_price"])+"</font></strike> "
-            send_content += "<font color=\"red\"><font size='4'>$" + str(item["cur_price"]) + " </font></p>"
+            send_content += "<p> <strike><font size='2'>$" + str(item["base_price"]) + "</font></strike> "
+            send_content += "<font color=\"red\" size='4'>$" + str(item["cur_price"]) + " </font></p>"
 
             send_content += "<p><img src=\"" + item["image"] + "\"></p></div>"
         send_content += "</body></html>"
@@ -106,11 +122,12 @@ class MajeCrawl(object):
 
     @staticmethod
     def deliver_email(text):
-        message = mail.EmailMessage(sender=u"胖臭家 <zhengzhong2013@gmail.com>",
-                                    subject='[From GAE] Maje New Sale ' + str(date.today()))
-        message.to = [u"胖臭<zhengzhong2013@gmail.com>", u"最爱的胖牛<xinyuliu0510@gmail.com>"]
-        message.html = text
-        message.send()
+        for receiver in MailManager().get_subscriber_list("0"):
+            message = mail.EmailMessage(sender=u"胖臭家<zhengzhong2013@gmail.com>",
+                                        subject='[From GAE] Maje New Sale ' + str(date.today()))
+            message.to = receiver
+            message.html = text
+            message.send()
 
     @staticmethod
     def crawl():
@@ -119,6 +136,7 @@ class MajeCrawl(object):
         maje.get_daily_sale_item(url0)
         text = maje.text_factory()
         maje.deliver_email(text)
+        return text
 
 if __name__ == '__main__':
     print MajeCrawl().crawl()

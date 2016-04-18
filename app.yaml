@@ -9,9 +9,24 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
+- url: /bootstrap
+  static_dir: static/bootstrap
+
 - url: /
-  static_files: static/index2.html
-  upload: static/index2.html
+  static_files: static/index.html
+  upload: static/index.html
+
+- url: /subscribed
+  static_files: static/subscribed.html
+  upload: static/subscribed.html
+
+- url: /unsubscribed
+  static_files: static/unsubscribed.html
+  upload: static/unsubscribed.html
+
+- url: /header
+  static_files: static/header.html
+  upload: static/header.html
 
 - url: .*
   script: main.app

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscribed!</title>
+
+    <script src="/bootstrap/js/jquery-1.12.3.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/js/validator.js"></script>
+    <script>
+        $(function(){
+          $("#header").load("/header");
+        });
+    </script>
+
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Unsubscribed...</strong> I'm sorry to see you leave...
+        </div>
+        <div class="text-center">
+            <a role="button" class="btn btn-primary btn-lg" href="/">Back</a>
+        </div>
+
+    </div>
+</body>
+</html>

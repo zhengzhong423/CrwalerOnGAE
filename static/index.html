@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>GAE Crawl</title>
+
+    <script src="/bootstrap/js/jquery-1.12.3.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/js/validator.js"></script>
+    <script>
+        $(function(){
+          $("#header").load("/header");
+        });
+    </script>
+
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div id="header"></div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3
+                    col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading" align="center"><h3>for those who like Maje and Sandro like my wife</h3></div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><p>When you subscribe, </p><p>you will get an email at 6:30pm PST
+                    every day to tell you what's on <strong>SALE</strong> today on Sandro and Maje website</p><p>
+                    My wife really likes it, because she won't miss any chance to get a beautiful dress :)</p>
+                </div>
+            </div>
+
+            <div class="hidden" id="checkBoxAlert">
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    Please choose <strong>at least one</strong> type you wanna subscribe :)
+                </div>
+            </div>
+
+            <form id="subForm" action="/mailManager" method="post">
+                <div class="btn-group-lg col-lg-12" data-toggle="buttons">
+                    <span id="helpBlock" class="help-block">Which interest you?</span>
+
+                    <label class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <input type="checkbox" name="sources" value="0" autocomplete="off"> Maje Sale
+                    </label>
+                    <label class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <input type="checkbox" name="sources" value="1" autocomplete="off"> Sandro Sale
+                    </label>
+                </div>
+
+                <br><br>
+                <br><br>
+                <br><br>
+
+                <div id="formDiv" class="form-group">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"> Email: </span>
+                        <input type="text" id="emailAddr" class="form-control" placeholder="enter email here"
+                             aria-describedby="emailAddrStatus"
+                             name="address" onchange="emailValidtor()">
+                    </div>
+                    <span id="sign" class="" aria-hidden="true"></span>
+                    <span id="emailAddrStatus" class="sr-only">(success)</span>
+                </div>
+
+            <br>
+
+            <div class="text-center">
+                <input type="button" class="btn btn-success btn-lg col-lg-5 col-md-5 col-sm-5 col-xs-5"
+                       name="action" value="subscribe" onclick="subSubmitCheck()">
+                <div><span class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></span></div>
+                <input type="button" class="btn btn-danger btn-lg col-lg-5 col-md-5 col-sm-5 col-xs-5"
+                       name="action" value="unsubscribe" onclick="unsubSubmitCheck()">
+            </div>
+             <input type="hidden" value="1" name="flag" id="flag">
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
